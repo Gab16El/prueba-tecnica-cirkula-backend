@@ -13,11 +13,17 @@ namespace CirkulaApi.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly Cloudinary _cloudinary;
 
         public StoresController(AppDbContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
+            _cloudinary = new Cloudinary(new Account(
+                configuration["Cloudinary:CloudName"],
+                configuration["Cloudinary:ApiKey"],
+                configuration["Cloudinary:ApiSecret"]
+            ));
 
         }
 
@@ -56,12 +62,6 @@ namespace CirkulaApi.Controllers
             string bannerUrl = "";
             if (banner != null)
             {
-                var cloudinary = new Cloudinary(new Account(
-                    _configuration["Cloudinary:CloudName"],
-                    _configuration["Cloudinary:ApiKey"],
-                    _configuration["Cloudinary:ApiSecret"]
-                ));
-
                 using var stream = banner.OpenReadStream();
                 var uploadParams = new ImageUploadParams
                 {
@@ -69,7 +69,7 @@ namespace CirkulaApi.Controllers
                     Folder = "cirkula/stores"
                 };
 
-                var uploadResult = await cloudinary.UploadAsync(uploadParams);
+                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
                 bannerUrl = uploadResult.SecureUrl.ToString();
             }
 
@@ -96,13 +96,8 @@ namespace CirkulaApi.Controllers
 
             if (banner != null)
             {
-                var cloudinary = new Cloudinary(new Account(
-                    _configuration["Cloudinary:CloudName"],
-                    _configuration["Cloudinary:ApiKey"],
-                    _configuration["Cloudinary:ApiSecret"]
-                ));
                 using var stream = banner.OpenReadStream();
-                var uploadResult = await cloudinary.UploadAsync(new ImageUploadParams
+                var uploadResult = await _cloudinary.UploadAsync(new ImageUploadParams
                 {
                     File = new FileDescription(banner.FileName, stream),
                     Folder = "cirkula/stores"
