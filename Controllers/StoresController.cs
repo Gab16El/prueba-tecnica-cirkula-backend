@@ -89,12 +89,35 @@ namespace CirkulaApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateStore(int id, [FromBody] Store store)
+        public async Task<IActionResult> UpdateStore(int id, [FromForm] string name, [FromForm] double latitude, [FromForm] double longitude, [FromForm] string openTime, [FromForm] string closeTime, IFormFile? banner)
         {
-            if (id != store.Id) return BadRequest();
-            _context.Entry(store).State = EntityState.Modified;
+            var store = await _context.Stores.FindAsync(id);
+            if (store == null) return NotFound();
+
+            if (banner != null)
+            {
+                var cloudinary = new Cloudinary(new Account(
+                    _configuration["Cloudinary:CloudName"],
+                    _configuration["Cloudinary:ApiKey"],
+                    _configuration["Cloudinary:ApiSecret"]
+                ));
+                using var stream = banner.OpenReadStream();
+                var uploadResult = await cloudinary.UploadAsync(new ImageUploadParams
+                {
+                    File = new FileDescription(banner.FileName, stream),
+                    Folder = "cirkula/stores"
+                });
+                store.BannerUrl = uploadResult.SecureUrl.ToString();
+            }
+
+            store.Name = name;
+            store.Latitude = latitude;
+            store.Longitude = longitude;
+            store.OpenTime = openTime;
+            store.CloseTime = closeTime;
+
             await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok(store);
         }
 
         [HttpDelete("{id}")]
