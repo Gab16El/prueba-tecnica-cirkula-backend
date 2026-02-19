@@ -4,7 +4,6 @@ using CirkulaApi.Data;
 using CirkulaApi.Models;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using Microsoft.AspNetCore.Routing.Constraints;
 
 namespace CirkulaApi.Controllers
 {
