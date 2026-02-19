@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CirkulaApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f5523decc0f40104f2fe400fdf21eff2d9e32423")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f79fb959cce0b8497376825fab111be04a409cea")]
 [assembly: System.Reflection.AssemblyProductAttribute("CirkulaApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CirkulaApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
