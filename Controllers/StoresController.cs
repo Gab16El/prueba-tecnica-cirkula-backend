@@ -141,7 +141,8 @@ namespace CirkulaApi.Controllers
 
         private static bool IsStoreOpen(string openTime, string closeTime)
         {
-            var now = DateTime.Now.TimeOfDay;
+            var peruTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "America/Lima");
+            var now = peruTime.TimeOfDay;
             var open = DateTime.ParseExact(openTime, "hh:mm tt", null).TimeOfDay;
             var close = DateTime.ParseExact(closeTime, "hh:mm tt", null).TimeOfDay;
             return now >= open && now <= close;
